@@ -1,2 +1,6 @@
 .idea
 venv
+tmp
+sd_config.yml
+gateway_config.yml
+cs_config.yml
