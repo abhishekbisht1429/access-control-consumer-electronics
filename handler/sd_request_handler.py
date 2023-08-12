@@ -53,8 +53,8 @@ def handle_msg1(data):
     x2 = secrets.randbelow(N)
     TS2 = util.time_stamp()
     b1_bytes = util.hash(TS2, x2.to_bytes(N_BYTES, 'big'),
-                         gn.s.to_bytes(N_BYTES, 'big'),
-                         gn.SID
+                         gn.s_j.to_bytes(N_BYTES, 'big'),
+                         gn.SID_j
                          )
     b1 = int.from_bytes(b1_bytes, 'big')
     B = EC_POINT_G * b1

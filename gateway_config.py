@@ -15,6 +15,10 @@ logging.basicConfig(level=logging.INFO)
 
 with open('gateway_config.yml') as config_file:
     config = yaml.safe_load(config_file)
+CS_MG1_URL = config['url']['cs']['base'] + '/' + 'cs/' + \
+              config['url']['cs']['mg1']
+CS_ACK_URL = config['url']['cs']['base'] + '/' + 'cs/' + \
+              config['url']['cs']['ack']
 
 # generate or load secret key
 with shelve.open('tmp/gn_store') as gn_store:
@@ -33,15 +37,15 @@ with shelve.open('tmp/gn_store') as gn_store:
             m_t.to_bytes(N_BYTES, 'big'),
         )
 
-    TID = gn_store['TID']
+    TID_j = gn_store['TID']
     RTS = gn_store['RTS']
-    SID = gn_store['SID']
+    SID_j = gn_store['SID']
 
     if 's' not in gn_store:
         gn_store['s'] = secrets.randbelow(N)
-    s = gn_store['s']
+    s_j = gn_store['s']
 
-    pub_s = EC_POINT_G * s
+    pub_s = EC_POINT_G * s_j
     with open('tmp/gn_pub', 'wb') as pub_s_store:
         pub_s_store.write(ECPoint.serialize(pub_s))
 

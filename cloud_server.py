@@ -34,9 +34,9 @@ class ServerRequestHandler(BaseHTTPRequestHandler):
         data = None
         if content_len > 0:
             data = self.rfile.read(content_len)
-        if path_components[1] == "gateway":
-            res_code, res_body = gateway_request_handler.handle(path_components[
-                                                            2:], data)
+        if path_components[1] == "cs":
+            res_code, res_body = (
+                gateway_request_handler.handle(path_components[2:], data))
         print(res_body)
 
         # return response to the server
