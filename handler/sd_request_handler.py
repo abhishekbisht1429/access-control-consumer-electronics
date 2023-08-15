@@ -17,6 +17,11 @@ def handle_msg1(data):
     TID_i_bytes = msg1['TID_bytes']
     Sig_i_bytes = msg1['Sig_bytes']
     A_bytes = msg1['A_bytes']
+    print(">>>==================== Receiving Msg1 ========================")
+    print('TID_i')
+    print('Sig_i')
+    print('A')
+    print("===============================================================")
 
     TID_i = int.from_bytes(TID_i_bytes, 'big')
     Sig_i = int.from_bytes(Sig_i_bytes, 'big')
@@ -78,6 +83,13 @@ def handle_msg1(data):
         'TID_i_star': TID_i_star
     }
 
+    print("<<<=================== Sending Msg2 ============================")
+    print('SKV')
+    print("TS2")
+    print('B')
+    print('TID_i_star')
+    print('================================================================')
+
     # save data required to process ack
     with shelve.open('tmp/gn_store') as gn_store:
         gn_store['SK_ji'] = SK_ji
@@ -92,6 +104,11 @@ def handle_ack(data):
 
     ack = msg3['ack']
     TS3 = msg3['TS3']
+
+    print('>>>================ Receiving Msg3 ===========================')
+    print('Ack')
+    print('TS3')
+    print('==============================================================')
 
     if time.time_ns() - int.from_bytes(TS3, 'big') > DELTA_T:
         logging.error('Outdated request')
@@ -110,6 +127,7 @@ def handle_ack(data):
 
         gn_store['TID_i_n'] = TID_i_n_bytes
 
+        print('Shared Session Key : ', SK_ji)
         return HTTPStatus.OK, b'success'
 
 

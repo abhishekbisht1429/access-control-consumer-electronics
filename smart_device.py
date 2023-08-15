@@ -67,15 +67,27 @@ def init_access_control():
         'TS1': TS1
     }
 
+    print("================= Sending Msg1 =====================>>>")
+    print('TID_i')
+    print('Sig_i')
+    print('A')
+    print('TS1')
+    print('===================================================')
+
     # send request to gateway node
     response = requests.post(GN_MSG1_URL, util.serialize_obj(msg1))
     logging.info('response code : ' + str(response.status_code))
     msg2 = util.deserialize_obj(response.text)
-    print('message ', util.deserialize_obj(response.text))
     SKV = msg2['SKV']
     TS2 = msg2['TS2']
     B_sz = msg2['B_sz']
     TID_i_star = msg2['TID_i_star']
+    print("<<<================= Receiving Msg2 ======================")
+    print('SKV')
+    print('TS2')
+    print('B')
+    print('TID_i_star')
+    print("=========================================================")
 
     B = ECPoint.deserialize(B_sz)
 
@@ -110,6 +122,11 @@ def init_access_control():
         'ack': ack,
         'TS3': TS3
     }
+    print("======================= Sending Ack ==================>>>")
+    print('ack')
+    print('TS3')
+    print("=========================================================")
+    print("Shared Session Key : ", SK_ij)
 
     response = requests.post(GN_ACK_URL, util.serialize_obj(msg3))
 

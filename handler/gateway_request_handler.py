@@ -20,6 +20,14 @@ def handle_msg1(data):
     TID_j = int.from_bytes(TID_j_bytes, 'big')
     D = MG1['D']
 
+    print('==================== Receiving MG1 ===================>>>')
+    print('MG1')
+    print('C')
+    print('T1')
+    print('TID_j')
+    print('D')
+    print('=========================================================')
+
     # check freshness of TS1
     if time.time_ns() - int.from_bytes(T1, 'big') > DELTA_T:
         logging.error('outdated TS1')
@@ -75,6 +83,15 @@ def handle_msg1(data):
         'TID_j_star_bytes': TID_j_star_bytes
     }
 
+    print('<<<==================== Sending MG2 =======================')
+    print('E')
+    print('PZ1_star')
+    print('SID_l_star')
+    print('SKV')
+    print('T2')
+    print('TID_j_star')
+    print('===========================================================')
+
     # save data required to process ack
     with shelve.open('tmp/cs_store') as cs_store:
         cs_store['SK_lj'] = SK_lj
@@ -90,6 +107,11 @@ def handle_ack(data):
     MG3 = util.deserialize_obj(data)
     Ack = MG3['Ack']
     T3 = MG3['T3']
+
+    print('==================== Receiving MG3 ===========================>>>')
+    print('Ack')
+    print('T3')
+    print('=================================================================')
 
     if time.time_ns() - int.from_bytes(T3, 'big') > DELTA_T:
         logging.error('Outdated Ack')
@@ -111,6 +133,8 @@ def handle_ack(data):
     # update TID_j
     with shelve.open('tmp/cs_store') as cs_store:
         cs_store['TID'] = TID_j_n
+
+    print('Shared Session Key : ', SK_lj)
 
     return HTTPStatus.OK, b'success'
 

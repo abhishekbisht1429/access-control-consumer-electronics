@@ -48,7 +48,6 @@ class ServerRequestHandler(BaseHTTPRequestHandler):
         if path_components[1] == "gateway_node":
             res_code, res_body = sd_request_handler.handle(path_components[2:],
                                                            data)
-        print(res_body)
 
         # return response to the server
         self.send_response(res_code, self.responses[res_code][0])
@@ -78,6 +77,13 @@ def establish_cs_key():
         'D': D
     }
 
+    print('=================== Sending MG1 ========================>>>')
+    print('C')
+    print('T1')
+    print('TID_j')
+    print('D')
+    print('===========================================================')
+
     print(CS_MG1_URL)
     print(CS_ACK_URL)
     response = requests.post(CS_MG1_URL, util.serialize_obj(MG1))
@@ -94,6 +100,15 @@ def establish_cs_key():
     SKV = MG2['SKV']
     T2 = MG2['T2']
     TID_j_star_bytes = MG2['TID_j_star_bytes']
+
+    print('<<<================= Receiving MG2 =========================')
+    print('E')
+    print('PZ1_star')
+    print('SID_l_star')
+    print('SKV')
+    print('T2')
+    print('TID_j_star')
+    print('============================================================')
 
     if time.time_ns() - int.from_bytes(T2, 'big') > DELTA_T:
         logging.error('Outdated T2')
@@ -123,14 +138,6 @@ def establish_cs_key():
 
     T3 = util.time_stamp()
 
-    ack = {
-        'SK_jl': SK_jl,
-        'PS1_dash': PS1_dash,
-        'PZ1': PZ1,
-        'T3': T3,
-        'T2': T2
-    }
-
     Ack = util.hash(SK_jl, PS1_dash, PZ1, T3, T2)
 
     MG3 = {
@@ -138,18 +145,24 @@ def establish_cs_key():
         'T3': T3
     }
 
+    print('=================== Sending MG3 =============================>>>')
+    print('Ack')
+    print('T3')
+    print('================================================================')
+
     response = requests.post(CS_ACK_URL, util.serialize_obj(MG3))
 
     if response.status_code != HTTPStatus.OK:
         logging.error('Ack failed to deliver')
         return
 
+    print('Shared Session Key : ', SK_jl)
 
 
 if __name__ == '__main__':
-    # addr = (config['server_ip'], config['server_port'])
-    # server = HTTPServer(addr, ServerRequestHandler)
-    # logging.info("serving requests from %s", addr)
-    # server.serve_forever()
+    addr = (config['server_ip'], config['server_port'])
+    server = HTTPServer(addr, ServerRequestHandler)
+    logging.info("serving requests from %s", addr)
+    server.serve_forever()
 
-    establish_cs_key()
+    # establish_cs_key()

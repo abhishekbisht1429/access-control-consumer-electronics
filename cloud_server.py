@@ -37,7 +37,6 @@ class ServerRequestHandler(BaseHTTPRequestHandler):
         if path_components[1] == "cs":
             res_code, res_body = (
                 gateway_request_handler.handle(path_components[2:], data))
-        print(res_body)
 
         # return response to the server
         self.send_response(res_code, self.responses[res_code][0])
